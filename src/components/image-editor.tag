@@ -1,16 +1,16 @@
 <image-editor>
   <img
-    class="image"
-    src={createImageUrl()}
-    style="filter: saturate({image.filter.saturation}%) contrast({image.filter.contrast}%) brightness({image.filter.brightness}%);"
+    class="image" src={createImageUrl()}
+    style="filter: saturate({image.filter.saturation}%) contrast({image.filter.contrast}%)
+    brightness({image.filter.brightness}%);"
   />
 
   <div class="menu">
     <div class="content-wrap">
       <form onchange={handler}>
-        <input type="range" data-type="brightness" value={image.filter.brightness} min="0" max="500"></input>
-        <input type="range" data-type="saturation" value={image.filter.saturation} min="0" max="500"></input>
-        <input type="range" data-type="contrast" value={image.filter.contrast} min="0" max="500"></input>
+        <input type="range" data-type="brightness" value={image.filter.brightness} min="0" max="300"></input>
+        <input type="range" data-type="saturation" value={image.filter.saturation} min="0" max="300"></input>
+        <input type="range" data-type="contrast" value={image.filter.contrast} min="0" max="300"></input>
       </form>
     </div>
   </div>
@@ -28,7 +28,7 @@
       float: right;
       vertical-align: middle;
       text-align: right;
-      background-color: gray;
+      background-color: #f8f8f8;
       height: 100%;
       width: 150px;
     }
