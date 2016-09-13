@@ -1,8 +1,8 @@
 <image-editor>
   <img
     class="image" src={createImageUrl()}
-    style="filter: saturate({image.filter.saturation}%) contrast({image.filter.contrast}%)
-    brightness({image.filter.brightness}%);"
+    style="filter: saturate({image.filter.saturation}%) contrast({image.filter.contrast}%) brightness({image.filter.brightness}%);
+    -webkit-filter: saturate({image.filter.saturation}%) contrast({image.filter.contrast}%) brightness({image.filter.brightness}%);"
   />
 
   <div class="menu">
