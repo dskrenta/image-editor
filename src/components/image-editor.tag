@@ -11,6 +11,7 @@
 
   <div class="menu">
     <div class="content-wrap">
+      <button onclick={done}>Done</button>
       <form onchange={handler}>
         <label>Brightness</label>
         <input type="range" data-type="brightness" value={image.filter.brightness} min="0" max="300"></input>
@@ -63,6 +64,7 @@
       id: 'S5V10IJO9MAS1NJ1',
       filter: filterUndefined()
     };
+    this.changed = false;
     const IMAGE_HEIGHT = 400;
     const self = this;
 
@@ -71,11 +73,10 @@
     }
 
     handler (event) {
+      self.changed = true;
       const value = event.target.value;
       const type = event.target.dataset.type;
       self.image.filter[type] = value;
-      self.update();
-      console.log(JSON.stringify(self.image));
     }
 
     function filterUndefined () {
@@ -93,11 +94,15 @@
 
     reset () {
       self.image.filter = filterUndefined();
+      self.changed = false;
     }
 
-    exportImage () {
-      // send image parameters to node-image-pipeline
-      // download updated image
+    done () {
+      if (self.changed) {
+        console.log('changed');
+      } else {
+        console.log('unchanged');
+      }
     }
   </script>
 </image-editor>
