@@ -1,4 +1,4 @@
-<editor>
+<image-editor>
   <img
     class="image"
     src={createImageUrl()}
@@ -64,4 +64,4 @@
       console.log(JSON.stringify(self.image));
     }
   </script>
-</editor>
+</image-editor>
