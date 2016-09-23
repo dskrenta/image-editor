@@ -3,7 +3,10 @@
     <title>Topix Image Editor</title>
   </head>
   <body>
-    <image-editor></image-editor>
+    <modal-editor>
+      <yield to="inner-button">Edit Image</yield>
+      <yield to="inner-content">Hello, world!</yield>
+    </modal-editor>
 
     <style>
       body {
