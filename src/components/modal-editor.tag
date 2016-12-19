@@ -1,18 +1,26 @@
 <modal-editor>
-  <button onclick={open} class={opts.modal-class || ''}>
+  <button onclick={open} class={opts.modal-class || 'btn-open'}>
     <yield from="inner-button" />
   </button>
 
   <div if={show} class="overlay">
     <div class="content">
       <div class="body">
+        <button class="btn-close" onclick={close}>Close</button>
         <yield from="inner-content" />
       </div>
-      <button onclick={close}>Close</button>
     </div>
   </div>
 
   <style>
+    .btn-close {
+      float: right;
+      right: 10px;
+      top: 10px;
+    }
+    .btn-open {
+
+    }
     .overlay {
       width: 100vw;
       height: 100vh;
