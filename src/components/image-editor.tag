@@ -1,5 +1,5 @@
 <image-editor>
-  <img class="image" src={createImageUrl()} />
+  <img class="image" id="previewImage" src={createImageUrl()} />
 
   <div class="menu">
     <div class="content-wrap">
@@ -44,11 +44,14 @@
   </style>
 
   <script>
+  const socket = io('http://localhost:3000');
   this.image = 'S5V10IJO9MAS1NJ1';
   const handler = {
     set: (target, prop, value) => {
       target[prop] = value;
-      console.log(JSON.stringify(editObj));
+      // console.log(JSON.stringify(editObj));
+      socket.emit('image.imageEditor', editObj);
+      console.log('Send data to node-image-pipeline');
       return true;
     }
   };
@@ -93,6 +96,20 @@
       saturation: 100,
       overlays: []
     };
+  }
+
+  socket.on('image.imageEditor:then', function (data) {
+    console.log(data);
+    createImageFromBuffer(data);
+    console.log('Got response from node-image-pipeline');
+  });
+
+  function createImageFromBuffer (data) {
+    var blob = new Blob([data], {type: 'image/png'});
+    var urlCreator = window.URL || window.webkitURL;
+    var imageUrl = urlCreator.createObjectURL(blob);
+    var img = document.getElementById('previewImage');
+    img.src = imageUrl;
   }
   </script>
 </image-editor>
