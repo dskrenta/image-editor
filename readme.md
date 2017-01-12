@@ -1,10 +1,10 @@
-# riot-quickstart
-Quickstart for projects built with riot and gulp
+# image-editor
+Riot application to adjust filter levels, crop, and overlay images
 
 ## Install
 ```
-git clone https://github.com/dskrenta/riot-quickstart
-cd riot-quickstart && npm install
+git clone https://github.com/dskrenta/image-editor
+cd image-editor && npm install
 ```
 
 ## Run
