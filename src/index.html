@@ -3,10 +3,8 @@
     <title>Topix Image Editor</title>
   </head>
   <body>
-    <modal-editor>
-      <yield to="inner-button">Edit Image</yield>
-      <yield to="inner-content">Hello, world!</yield>
-    </modal-editor>
+    <image-editor>
+    </image-edtior>
 
     <style>
       body {
@@ -16,6 +14,7 @@
 
     <!-- scripts -->
     <script src="https://cdn.jsdelivr.net/riot/2.5/riot.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="dist/components.js"></script>
     <script>
       riot.mount('*');
