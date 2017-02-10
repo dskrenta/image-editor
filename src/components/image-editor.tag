@@ -1,18 +1,17 @@
 <image-editor>
-  <img class="image" id="previewImage" src={createImageUrl()} />
+  <img class="image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
 
   <div class="menu">
     <div class="content-wrap">
       <button onclick={done}>Done</button>
       <form onchange={filter}>
         <label>Brightness</label>
-        <input type="range" data-type="brightness" value={image.filter.brightness} min="0" max="300"></input>
+        <input type="range" data-type="brt" value={values.brt} min="100" max="300"></input>
         <label>Saturation</label>
-        <input type="range" data-type="saturation" value={image.filter.saturation} min="0" max="300"></input>
+        <input type="range" data-type="sat" value={values.sat} min="100" max="300"></input>
         <label>Contrast</label>
-        <input type="range" data-type="contrast" value={image.filter.contrast} min="0" max="300"></input>
+        <input type="range" data-type="con" value={values.con} min="0" max="100"></input>
       </form>
-      <button onclick={imageOverlay}>Image Overlay</button>
       <button onclick={crop}>Crop</button>
       <button onclick={reset}>Reset</button>
     </div>
@@ -26,6 +25,7 @@
       left: 0;
       right: 0;
       margin: auto;
+      width: 600px;
     }
     .menu {
       float: right;
@@ -44,72 +44,50 @@
   </style>
 
   <script>
-  const socket = io('http://localhost:3000');
-  this.image = 'S5V10IJO9MAS1NJ1';
-  const handler = {
-    set: (target, prop, value) => {
-      target[prop] = value;
-      // console.log(JSON.stringify(editObj));
-      socket.emit('image.imageEditor', editObj);
-      console.log('Send data to node-image-pipeline');
-      return true;
-    }
-  };
-  const editObj = new Proxy(defaults(), handler);
-  const IMAGE_HEIGHT = 400;
   const self = this;
+  this.id = 'S5V10IJO9MAS1NJ1';
+  this.values = {
+    brt: 100,
+    sat: 100,
+    con: 0,
+    crop: {
+      x: 20,
+      y: 20,
+      width: 500,
+      height: 500
+    }
+  }
+  this.editSpec = 'brt100-sat-100-con0x100';
 
   filter (event) {
     const value = event.target.value;
     const type = event.target.dataset.type;
-    editObj[type] = value;
+    self.values[type] = value;
+    createEditSpec();
   }
 
-  crop (event) {
-    editObj.crop = {
-      width: 200,
-      height: 150,
-      x: 20,
-      y: 20
+  function createEditSpec () {
+    self.editSpec = `brt${self.values.brt}-sat${self.values.sat}-con${self.values.con}x${100 - self.values.con}`;
+    self.update();
+  }
+
+  crop () {
+    // trigger UI
+    // add crop values
+  }
+
+  reset () {
+    self.values = {
+      brt: 100,
+      sat: 100,
+      con: 0,
+      crop: {}
     }
+    createEditSpec();
   }
 
-  imageOverlay (event) {
-    let tempArray = editObj.overlays;
-    tempArray.push({
-      image: 'http://proxy.topixcdn.com/ipicimg/MEA8SRTIVA7JE6SH-rszh100',
-      x: 10,
-      y: 10
-    });
-    editObj.overlays = tempArray;
-  }
-
-  createImageUrl () {
-    return `http:\/\/topix.com/ipicimg/${self.image}-rszh${IMAGE_HEIGHT}`;
-  }
-
-  function defaults () {
-    return {
-      id: 'S5V10IJO9MAS1NJ1',
-      brightness: 100,
-      contrast: '+0',
-      saturation: 100,
-      overlays: []
-    };
-  }
-
-  socket.on('image.imageEditor:then', function (data) {
-    console.log(data);
-    createImageFromBuffer(data);
-    console.log('Got response from node-image-pipeline');
-  });
-
-  function createImageFromBuffer (data) {
-    var blob = new Blob([data], {type: 'image/png'});
-    var urlCreator = window.URL || window.webkitURL;
-    var imageUrl = urlCreator.createObjectURL(blob);
-    var img = document.getElementById('previewImage');
-    img.src = imageUrl;
+  done () {
+    // callback with editSpec
   }
   </script>
 </image-editor>
