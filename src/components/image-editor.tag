@@ -17,7 +17,9 @@
 
   <img class="preview-image" id="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
 
-  <div class="crop" id="crop" onmousedown={mouseDown}>CROP</div>
+  <div class="crop" id="crop" onmousedown={mouseDown}>
+    <div class="crop-resize"></div>
+  </div>
 
   <style>
     .preview-image {
@@ -47,9 +49,20 @@
 
     .crop {
       position: absolute;
-      width: 200px;
+      width: 400px;
+      height: 300px;
       border-style: dashed;
       border-color: red;
+    }
+
+    .crop-resize {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      border-style: solid;
+      border-color: blue;
     }
   </style>
 
@@ -74,6 +87,7 @@
   this.on('mount', () => {
     self.image = document.getElementById('preview-image');
     self.crop = document.getElementById('crop');
+    self.crop.style.cursor = "move";
     window.addEventListener('mouseup', mouseUp, false);
   })
 
@@ -90,8 +104,6 @@
   }
 
   function drag () {
-    const imagePosition = getPosition(self.image);
-    const cropPosition = getPosition(self.crop);
     self.crop.style.left = event.clientX - self.relMousePos.x;
     self.crop.style.top = event.clientY - self.relMousePos.y;
   }
