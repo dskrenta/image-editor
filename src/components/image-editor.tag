@@ -1,6 +1,4 @@
 <image-editor>
-  <img class="image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
-
   <div class="menu">
     <div class="content-wrap">
       <button onclick={done}>Done</button>
@@ -17,7 +15,31 @@
     </div>
   </div>
 
+  <img class="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
+
   <style>
+    /*
+    .preview-wrap {
+      width: 85vw;
+      height: 100vh;
+    }
+    */
+
+    .menu-wrap {
+      width: 15vw;
+      height: 100vh;
+    }
+
+    .preview-image {
+      object-fit: contain;
+      object-position: center;
+      width: 85vw;
+      height: 100vh;
+      float: left;
+      position: absolute;
+    }
+
+    /*
     .image {
       position: absolute;
       top: 0;
@@ -27,13 +49,16 @@
       margin: auto;
       width: 600px;
     }
+    */
+
     .menu {
+      width: 15vw;
+      height: 100vh;
+
       float: right;
       vertical-align: middle;
       text-align: right;
       background-color: #f8f8f8;
-      height: 100%;
-      width: 150px;
     }
     .content-wrap {
       margin-right: 1em;
@@ -58,6 +83,7 @@
     }
   }
   this.editSpec = 'brt100-sat-100-con0x100';
+  this.cb = opts.cb;
 
   filter (event) {
     const value = event.target.value;
@@ -87,7 +113,7 @@
   }
 
   done () {
-    // callback with editSpec
+    cb(self.editSpec);
   }
   </script>
 </image-editor>
