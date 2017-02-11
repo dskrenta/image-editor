@@ -15,58 +15,41 @@
     </div>
   </div>
 
-  <img class="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
+  <img class="preview-image" id="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
+
+  <div class="crop" id="crop" onmousedown={mouseDown}>CROP</div>
 
   <style>
-    /*
-    .preview-wrap {
-      width: 85vw;
-      height: 100vh;
-    }
-    */
-
-    .menu-wrap {
-      width: 15vw;
-      height: 100vh;
-    }
-
     .preview-image {
       object-fit: contain;
       object-position: center;
-      // width: 80vw;
       width: calc(100vw - 170px);
       height: 100vh;
       float: left;
       position: absolute;
     }
 
-    /*
-    .image {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
-      width: 600px;
-    }
-    */
-
     .menu {
-      // width: 20vw;
       width: 170px;
       height: 100vh;
-
       float: right;
       vertical-align: middle;
       text-align: right;
       background-color: #f8f8f8;
     }
+
     .content-wrap {
       margin-right: 1em;
       position: relative;
       top: 50%;
       transform: translateY(-50%);
+    }
+
+    .crop {
+      position: absolute;
+      width: 200px;
+      border-style: dashed;
+      border-color: red;
     }
   </style>
 
@@ -86,6 +69,32 @@
   }
   this.editSpec = 'brt100-sat-100-con0x100';
   this.cb = opts.cb;
+  this.mouseDown = false;
+
+  this.on('mount', () => {
+    self.image = document.getElementById('preview-image');
+    self.crop = document.getElementById('crop');
+    window.addEventListener('mouseup', mouseUp, false);
+  })
+
+  function mouseUp () {
+    window.removeEventListener('mousemove', drag, true);
+  }
+
+  mouseDown (event) {
+    window.addEventListener('mousemove', drag, true);
+    self.relMousePos = {
+      x: event.pageX - self.crop.offsetLeft,
+      y: event.pageY - self.crop.offsetTop
+    };
+  }
+
+  function drag () {
+    const imagePosition = getPosition(self.image);
+    const cropPosition = getPosition(self.crop);
+    self.crop.style.left = event.clientX - self.relMousePos.x;
+    self.crop.style.top = event.clientY - self.relMousePos.y;
+  }
 
   filter (event) {
     const value = event.target.value;
@@ -117,5 +126,15 @@
   done () {
     cb(self.editSpec);
   }
+
+  function getPosition (element) {
+      const rect = element.getBoundingClientRect();
+      return {
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height
+      };
+    }
   </script>
 </image-editor>
