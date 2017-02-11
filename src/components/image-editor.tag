@@ -8,7 +8,7 @@
         <label>Saturation</label>
         <input type="range" data-type="sat" value={values.sat} min="100" max="300"></input>
         <label>Contrast</label>
-        <input type="range" data-type="con" value={values.con} min="0" max="100"></input>
+        <input type="range" data-type="con" value={values.con} min="0" max="50"></input>
       </form>
       <button onclick={crop}>Crop</button>
       <button onclick={reset}>Reset</button>
@@ -33,7 +33,8 @@
     .preview-image {
       object-fit: contain;
       object-position: center;
-      width: 85vw;
+      // width: 80vw;
+      width: calc(100vw - 170px);
       height: 100vh;
       float: left;
       position: absolute;
@@ -52,7 +53,8 @@
     */
 
     .menu {
-      width: 15vw;
+      // width: 20vw;
+      width: 170px;
       height: 100vh;
 
       float: right;
