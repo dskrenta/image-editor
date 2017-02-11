@@ -18,7 +18,7 @@
   <img class="preview-image" id="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
 
   <div class="crop" id="crop" onmousedown={mouseDown}>
-    <div class="crop-resize"></div>
+    <div class="crop-resize" onmousedown={cropResize}></div>
   </div>
 
   <style>
@@ -59,8 +59,8 @@
       width: 10px;
       height: 10px;
       position: absolute;
-      bottom: 0px;
-      right: 0px;
+      bottom: -15px;
+      right: -15px;
       border-style: solid;
       border-color: blue;
     }
@@ -96,16 +96,28 @@
   }
 
   mouseDown (event) {
+    self.moveType = 0;
     window.addEventListener('mousemove', drag, true);
     self.relMousePos = {
       x: event.pageX - self.crop.offsetLeft,
       y: event.pageY - self.crop.offsetTop
     };
+    console.log(self.moveType);
   }
 
   function drag () {
-    self.crop.style.left = event.clientX - self.relMousePos.x;
-    self.crop.style.top = event.clientY - self.relMousePos.y;
+    if (self.moveType === 0) {
+      self.crop.style.left = event.clientX - self.relMousePos.x;
+      self.crop.style.top = event.clientY - self.relMousePos.y;
+    } else {
+      // stuff
+    }
+  }
+
+  cropResize (event) {
+    self.moveType = 1;
+    window.addEventListener('mousemove', drag, true);
+    console.log(self.moveType);
   }
 
   filter (event) {
@@ -139,14 +151,23 @@
     cb(self.editSpec);
   }
 
-  function getPosition (element) {
-      const rect = element.getBoundingClientRect();
-      return {
-        x: rect.left,
-        y: rect.top,
-        width: rect.width,
-        height: rect.height
-      };
+  function mouseWithinBounds (element, mouseX, mouseY) {
+    const elemPos = getPosition(element);
+    if (mouseX >= element.x && mouseY >= element.y && mouseX <= (element.x + element.width) && mouseY <= (element.y + element.height)) {
+      return true;
+    } else {
+      return false;
     }
+  }
+
+  function getPosition (element) {
+    const rect = element.getBoundingClientRect();
+    return {
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height
+    };
+  }
   </script>
 </image-editor>
