@@ -17,9 +17,7 @@
 
   <img class="preview-image" id="preview-image" src="http://topix.com/ipicimg/{id}-{editSpec}"/>
 
-  <div class="crop" id="crop" onmousedown={mouseDown}>
-    <div class="crop-resize" onmousedown={cropResize}></div>
-  </div>
+  <div class="crop" id="crop"></div>
 
   <style>
     .preview-image {
@@ -53,16 +51,8 @@
       height: 300px;
       border-style: dashed;
       border-color: red;
-    }
-
-    .crop-resize {
-      width: 10px;
-      height: 10px;
-      position: absolute;
-      bottom: -15px;
-      right: -15px;
-      border-style: solid;
-      border-color: blue;
+      top: 20px;
+      left: 20px;
     }
   </style>
 
@@ -82,43 +72,14 @@
   }
   this.editSpec = 'brt100-sat-100-con0x100';
   this.cb = opts.cb;
-  this.mouseDown = false;
 
   this.on('mount', () => {
-    self.image = document.getElementById('preview-image');
-    self.crop = document.getElementById('crop');
-    self.crop.style.cursor = "move";
-    window.addEventListener('mouseup', mouseUp, false);
+    $('#crop').draggable({
+      containment: "#preview-image",
+	    scroll: false
+    });
+    $('#crop').resizable();
   })
-
-  function mouseUp () {
-    window.removeEventListener('mousemove', drag, true);
-  }
-
-  mouseDown (event) {
-    self.moveType = 0;
-    window.addEventListener('mousemove', drag, true);
-    self.relMousePos = {
-      x: event.pageX - self.crop.offsetLeft,
-      y: event.pageY - self.crop.offsetTop
-    };
-    console.log(self.moveType);
-  }
-
-  function drag () {
-    if (self.moveType === 0) {
-      self.crop.style.left = event.clientX - self.relMousePos.x;
-      self.crop.style.top = event.clientY - self.relMousePos.y;
-    } else {
-      // stuff
-    }
-  }
-
-  cropResize (event) {
-    self.moveType = 1;
-    window.addEventListener('mousemove', drag, true);
-    console.log(self.moveType);
-  }
 
   filter (event) {
     const value = event.target.value;
@@ -149,15 +110,6 @@
 
   done () {
     cb(self.editSpec);
-  }
-
-  function mouseWithinBounds (element, mouseX, mouseY) {
-    const elemPos = getPosition(element);
-    if (mouseX >= element.x && mouseY >= element.y && mouseX <= (element.x + element.width) && mouseY <= (element.y + element.height)) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   function getPosition (element) {
