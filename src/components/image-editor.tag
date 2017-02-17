@@ -71,7 +71,7 @@
     brt: 100,
     sat: 100,
     con: 0
-  }
+  };
   this.editSpec = 'brt100-sat-100-con0x100';
   this.cb = opts.cb;
   this.showCrop = false;
