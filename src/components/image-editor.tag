@@ -89,9 +89,7 @@
   dimensions (event) {
     self.dimensions = {
       width: event.path[0].naturalWidth,
-      height: event.path[0].naturalHeight,
-      pWidth: event.path[0].clientWidth,
-      pHeight: event.path[0].clientHeight
+      height: event.path[0].naturalHeight
     };
     self.dimensions.aspectRatio = self.dimensions.width / self.dimensions.height;
   }
