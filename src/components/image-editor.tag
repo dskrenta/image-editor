@@ -70,13 +70,7 @@
   this.values = {
     brt: 100,
     sat: 100,
-    con: 0,
-    crop: {
-      x: 20,
-      y: 20,
-      width: 500,
-      height: 500
-    }
+    con: 0
   }
   this.editSpec = 'brt100-sat-100-con0x100';
   this.cb = opts.cb;
