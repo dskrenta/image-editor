@@ -110,7 +110,12 @@
   }
 
   function createEditSpec () {
-    self.editSpec = `brt${self.values.brt}-sat${self.values.sat}-con${self.values.con}x${100 - self.values.con}`;
+    console.log(self.values);
+    let cropSpec = '';
+    if (self.values.crop) {
+      cropSpec = `cp${self.values.crop.x}x${self.values.crop.y}x${self.values.crop.width}x${self.values.crop.height}`;
+    }
+    self.editSpec = `brt${self.values.brt}-sat${self.values.sat}-con${self.values.con}x${100 - self.values.con}-${cropSpec}`;
     self.update();
   }
 
@@ -118,9 +123,21 @@
     if (self.showCrop) {
       self.showCrop = false;
       const cropPos = getPosition(self.crop);
-      const imgPos = getPosition(self.image);
-      const imgPreviewSize = calculatePreviewSize();
-      console.log(imgPreviewSize);
+      const imgPos = calculatePreviewSize();
+
+      const scaleX = Math.round(((cropPos.x - imgPos.x) / imgPos.width) * self.dimensions.width);
+      const scaleY = Math.round(((cropPos.y - imgPos.y) / imgPos.height) * self.dimensions.height);
+      const scaleWidth = Math.round((cropPos.width / imgPos.width) * self.dimensions.width + scaleX);
+      const scaleHeight = Math.round((cropPos.height / imgPos.height) * self.dimensions.height + scaleY);
+
+      self.values.crop = {
+        x: scaleX,
+        y: scaleY,
+        width: scaleWidth,
+        height: scaleHeight
+      };
+
+      createEditSpec();
     } else {
       self.showCrop = true;
     }
@@ -130,8 +147,7 @@
     self.values = {
       brt: 100,
       sat: 100,
-      con: 0,
-      crop: {}
+      con: 0
     }
     createEditSpec();
   }
