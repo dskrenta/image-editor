@@ -66,12 +66,12 @@
 
   <script>
   const self = this;
-  this.id = 'S5V10IJO9MAS1NJ1';
+  this.id = opts.id;
   this.values = {
     brt: 100,
     sat: 100,
     con: 0
-  }
+  };
   this.editSpec = 'brt100-sat-100-con0x100';
   this.cb = opts.cb;
   this.showCrop = false;
@@ -147,7 +147,7 @@
   }
 
   done () {
-    cb(self.editSpec);
+    self.cb(self.editSpec);
   }
 
   function calculatePreviewSize () {
