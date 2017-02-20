@@ -102,7 +102,6 @@
     }
 
     function createEditSpec () {
-      console.log(self.values);
       let cropSpec = '';
       if (self.values.crop) {
         cropSpec = `cp${self.values.crop.x}x${self.values.crop.y}x${self.values.crop.width}x${self.values.crop.height}`;
