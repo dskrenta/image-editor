@@ -12,7 +12,7 @@
       </form>
       <button onclick={crop}>Crop</button>
       <button onclick={reset}>Reset</button>
-      <p>{cropSize.width} x {cropSize.height}</p>
+      <p show={values.crop}>{values.crop.width} x {values.crop.height}</p>
     </div>
   </div>
 
@@ -77,6 +77,7 @@
     this.editSpec = defaultSpec;
     this.cb = opts.cb;
     this.showCrop = false;
+    this.finalEditSpec = defaultSpec;
 
     this.on('mount', () => {
       $('#crop').draggable({
@@ -84,7 +85,7 @@
   	    scroll: false
       });
       $('#crop').resizable({
-        stop: updateSize
+        stop: updateCropSize
       });
       self.crop = document.getElementById('crop');
       self.image = document.getElementById('preview-image');
@@ -108,19 +109,21 @@
       const value = event.target.value;
       const type = event.target.dataset.type;
       self.values[type] = value;
-      createEditSpec();
+      createEditSpec(true);
     }
 
-    function createEditSpec () {
+    function createEditSpec (display) {
       let cropSpec = '';
       if (self.values.crop) {
         cropSpec = `cp${self.values.crop.x}x${self.values.crop.y}x${self.values.crop.width}x${self.values.crop.height}`;
       }
-      self.editSpec = `brt${self.values.brt}-sat${self.values.sat}-con${self.values.con}x${100 - self.values.con}-${cropSpec}`;
+      const spec = `brt${self.values.brt}-sat${self.values.sat}-con${self.values.con}x${100 - self.values.con}-${cropSpec}`;
+      self.finalEditSpec = spec;
+      if (display) self.editSpec = spec;
       self.update();
     }
 
-    function updateSize () {
+    function cropPosition () {
       const cropPos = getPosition(self.crop);
       const imgPos = calculatePreviewSize();
 
@@ -129,33 +132,25 @@
       const scaleWidth = Math.round((cropPos.width / imgPos.width) * self.dimensions.width + scaleX);
       const scaleHeight = Math.round((cropPos.height / imgPos.height) * self.dimensions.height + scaleY);
 
-      self.cropSize = {
+      return {
+        x: scaleX,
+        y: scaleY,
         width: scaleWidth,
         height: scaleHeight
       };
+    }
 
+    function updateCropSize () {
+      self.values.crop = cropPosition();
+      createEditSpec(false);
       self.update();
     }
 
     crop (event) {
       if (self.showCrop) {
         self.showCrop = false;
-        const cropPos = getPosition(self.crop);
-        const imgPos = calculatePreviewSize();
-
-        const scaleX = Math.round(((cropPos.x - imgPos.x) / imgPos.width) * self.dimensions.width);
-        const scaleY = Math.round(((cropPos.y - imgPos.y) / imgPos.height) * self.dimensions.height);
-        const scaleWidth = Math.round((cropPos.width / imgPos.width) * self.dimensions.width + scaleX);
-        const scaleHeight = Math.round((cropPos.height / imgPos.height) * self.dimensions.height + scaleY);
-
-        self.values.crop = {
-          x: scaleX,
-          y: scaleY,
-          width: scaleWidth,
-          height: scaleHeight
-        };
-
-        createEditSpec();
+        self.values.crop = cropPosition();
+        createEditSpec(true);
       } else {
         self.showCrop = true;
       }
@@ -172,7 +167,7 @@
     }
 
     done () {
-      self.cb(self.editSpec);
+      self.cb(self.finalEditSpec);
     }
 
     function calculatePreviewSize () {
