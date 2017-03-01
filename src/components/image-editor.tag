@@ -67,13 +67,14 @@
 
   <script>
     const self = this;
+    const defaultSpec = opts.defaultSpec;
     this.id = opts.id;
     this.values = {
       brt: 100,
       sat: 100,
       con: 0
     };
-    this.editSpec = 'brt100-sat-100-con0x100';
+    this.editSpec = defaultSpec;
     this.cb = opts.cb;
     this.showCrop = false;
 
@@ -166,7 +167,8 @@
         sat: 100,
         con: 0
       }
-      createEditSpec();
+      self.editSpec = defaultSpec;
+      self.update();
     }
 
     done () {
