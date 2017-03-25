@@ -78,6 +78,7 @@
     this.cb = opts.cb;
     this.showCrop = false;
     this.finalEditSpec = defaultSpec;
+    this.aspectRatio = opts.aspectRatio;
 
     this.on('mount', () => {
       $('#crop').draggable({
@@ -85,7 +86,9 @@
   	    scroll: false
       });
       $('#crop').resizable({
-        stop: updateCropSize
+        stop: updateCropSize,
+        aspectRatio: self.aspectRatio,
+        containment: "#preview-image"
       });
       self.crop = document.getElementById('crop');
       self.image = document.getElementById('preview-image');
