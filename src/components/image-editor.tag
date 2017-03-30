@@ -92,6 +92,14 @@
       });
       self.crop = document.getElementById('crop');
       self.image = document.getElementById('preview-image');
+      self.image.onload = () => {
+        console.log(getImgSizeInfo(self.image));
+      };
+      /*
+      window.onresize = () => {
+        console.log('window dimensions changed');
+      };
+      */
     })
 
     dimensions (event) {
@@ -203,5 +211,30 @@
         height: rect.height
       };
     }
+
+    function getRenderedSize (contains, cWidth, cHeight, width, height, pos) {
+      const oRatio = width / height;
+      const cRatio = cWidth / cHeight;
+      return function () {
+        if (contains ? (oRatio > cRatio) : (oRatio < cRatio)) {
+        this.width = cWidth;
+        this.height = cWidth / oRatio;
+      } else {
+        this.width = cHeight * oRatio;
+        this.height = cHeight;
+      }
+      this.left = (cWidth - this.width) * (pos / 100);
+      this.right = this.width + this.left;
+      return this;
+    }.call({});
+  }
+
+  function getImgSizeInfo(img) {
+    var pos = window.getComputedStyle(img).getPropertyValue('object-position').split(' ');
+    const style = window.getComputedStyle(img)
+    console.log(style.getPropertyValue('width'), style.getPropertyValue('height'), style.getPropertyValue('top'), style.getPropertyValue('left'));
+    console.log(pos);
+    return getRenderedSize(true, img.width, img.height, img.naturalWidth, img.naturalHeight, parseInt(pos[0]));
+  }
   </script>
 </image-editor>
